@@ -1,0 +1,104 @@
+// Betting tips platform with user authentication, tip history, and background styling
+import React, { useState } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+const BettingTipsPlatform = () => {
+  const [tips, setTips] = useState([]);
+  const [match, setMatch] = useState("");
+  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [odds, setOdds] = useState("");
+  const [user, setUser] = useState(null);
+
+  const handleAddTip = () => {
+    const newTip = { match, date, description, odds };
+    setTips([newTip, ...tips]);
+    setMatch("");
+    setDate("");
+    setDescription("");
+    setOdds("");
+  };
+
+  const handleLogin = () => {
+    setUser({ name: "TipsterPro" });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-100 to-purple-200 p-6">
+      <div className="max-w-4xl mx-auto grid gap-6 bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl p-6">
+        <div className="flex flex-col items-center justify-center gap-2">
+  <h1 className="text-4xl font-extrabold">MASTER</h1>
+  <a href="https://master-betting-tips.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">https://master-betting-tips.com</a>
+</div>
+
+        {!user ? (
+          <div className="text-center">
+            <Button onClick={handleLogin}>Login</Button>
+          </div>
+        ) : (
+          <Tabs defaultValue="create">
+            <TabsList className="grid grid-cols-2 w-full mb-4">
+              <TabsTrigger value="create">Create Tip</TabsTrigger>
+              <TabsTrigger value="history">Tip History</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="create">
+              <Card>
+                <CardContent className="space-y-4">
+                  <h2 className="text-xl font-semibold">Create a New Tip</h2>
+                  <Input
+                    placeholder="Match (e.g. Arsenal vs Chelsea)"
+                    value={match}
+                    onChange={(e) => setMatch(e.target.value)}
+                  />
+                  <Input
+                    placeholder="Date (e.g. 2025-05-07)"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Tip description (e.g. Both teams to score)"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <Input
+                    placeholder="Odds (e.g. 1.85)"
+                    value={odds}
+                    onChange={(e) => setOdds(e.target.value)}
+                  />
+                  <Button onClick={handleAddTip}>Add Tip</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="history">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">Tip History</h2>
+                {tips.length === 0 ? (
+                  <p className="text-center">No tips added yet.</p>
+                ) : (
+                  tips.map((tip, index) => (
+                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                      <CardContent>
+                        <p className="font-bold">{tip.match}</p>
+                        <p>Date: {tip.date}</p>
+                        <p>Tip: {tip.description}</p>
+                        <p>Odds: {tip.odds}</p>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default BettingTipsPlatform;
